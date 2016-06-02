@@ -1,6 +1,28 @@
 ###############################################################################
+# DEPLOYED AT
+#   https://narrative.kbase.us/narrative/ws.15030.obj.1
+###############################################################################
+
+###############################################################################
 # NEW CELL
 ###############################################################################
+
+filter_internal_users = True
+#filter_internal_users = False
+if filter_internal_users:
+    internal_users = dict()
+    import urllib2
+    response = urllib2.urlopen('https://raw.githubusercontent.com/kbase/metrics/master/kbase-staff.lst')
+    for user in response.read().split("\n"):
+        internal_users[user] = True
+
+###############################################################################
+# NEW CELL
+###############################################################################
+
+####################################################################################
+# https://github.com/dcchivian/kb_sdk_catalog_metrics/blob/master/src/bar_plots.py #
+####################################################################################
 
 from biokbase.catalog.Client import Catalog
 catalog = Catalog(url="https://kbase.us/services/catalog")
@@ -30,6 +52,9 @@ for app_user_stats in aggregated_by_user:
     user   = app_user_stats['user']
     n      = app_user_stats['n']
     
+    if filter_internal_users and user in internal_users:
+        continue
+        
     try:
         total_runs_by_app[app] += n
         total_users_by_app[app] += 1
@@ -38,8 +63,7 @@ for app_user_stats in aggregated_by_user:
         total_users_by_app[app] = 1
         
     try:
-        total_runs_by_module[module] += n
-        
+        total_runs_by_module[module] += n        
     except:
         total_runs_by_module[module] = n
 

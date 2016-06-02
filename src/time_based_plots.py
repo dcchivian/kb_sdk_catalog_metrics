@@ -1,6 +1,28 @@
 ###############################################################################
+# DEPLOYED AT
+#   https://narrative.kbase.us/narrative/ws.15030.obj.1
+###############################################################################
+
+###############################################################################
 # NEW CELL
 ###############################################################################
+
+filter_internal_users = True
+#filter_internal_users = False
+if filter_internal_users:
+    internal_users = dict()
+    import urllib2
+    response = urllib2.urlopen('https://raw.githubusercontent.com/kbase/metrics/master/kbase-staff.lst')
+    for user in response.read().split("\n"):
+        internal_users[user] = True
+
+###############################################################################
+# NEW CELL
+###############################################################################
+
+###########################################################################################
+# https://github.com/dcchivian/kb_sdk_catalog_metrics/blob/master/src/time_based_plots.py #
+###########################################################################################
 
 from biokbase.catalog.Client import Catalog
 catalog = Catalog(url="https://kbase.us/services/catalog")
@@ -12,7 +34,7 @@ import matplotlib.pyplot as plt
 #pd.__version__
 
 import datetime, time
-secs_per_week = 604800    
+secs_per_week = 7*24*60*60 
 
 
 # Init data containers
@@ -62,7 +84,8 @@ dates = [ '2016-01-02',
           '2016-05-07',
           '2016-05-14',
           '2016-05-21',
-          '2016-05-28'
+          '2016-05-28',
+          '2016-06-04'
         ]
 
 color_list = ['#FF0000',
@@ -142,6 +165,9 @@ for i,date_str in enumerate(dates):
         user   = app_user_stats['user']
         n      = app_user_stats['n']
 
+        if filter_internal_users and user in internal_users:
+            continue
+        
         # user tally
         if user in seen_user:
             if seen_user[user] == i:
@@ -415,7 +441,7 @@ for user in sorted_total_app_runs_by_user:
 ###############################################################################
 
 # config for single user
-user = 'dylan'
+user = 'mikaelacashman'
 
 # make pandas dataframe
 total_app_runs_by_user_and_app_pandas_struct = dict()  # just going to use app as key since user is collapsed
@@ -449,7 +475,7 @@ for app in sorted_total_app_runs_by_user_and_app:
 ###############################################################################
 
 # config for single app
-app = 'build_metabolic_model'
+app = 'gapfill_metabolic_model'
 
 # make pandas dataframe
 total_app_runs_by_app_and_user_pandas_struct = dict()  # just going to use user as key since app is collapsed
