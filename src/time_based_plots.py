@@ -1,6 +1,6 @@
 ###############################################################################
 # DEPLOYED AT
-#   https://narrative.kbase.us/narrative/ws.15030.obj.1
+#   https://narrative.kbase.us/narrative/ws.16774.obj.1
 ###############################################################################
 
 ###############################################################################
@@ -44,6 +44,8 @@ total_regular_users = []
 seen_user = dict()
 seen_twice_user = dict()
 
+total_runs = []
+
 total_runs_by_app_vector = dict()
 total_runs_by_app_final = dict()
 
@@ -85,7 +87,19 @@ dates = [ '2016-01-02',
           '2016-05-14',
           '2016-05-21',
           '2016-05-28',
-          '2016-06-04'
+          '2016-06-04',
+          '2016-06-11',
+          '2016-06-18',
+          '2016-06-25',
+          '2016-07-02',
+          '2016-07-09',
+          '2016-07-16',
+          '2016-07-23',
+          '2016-07-30',
+          '2016-08-06',
+          '2016-08-13',
+          '2016-08-20',
+          '2016-08-27'     
         ]
 
 color_list = ['#FF0000',
@@ -144,6 +158,10 @@ for i,date_str in enumerate(dates):
     else:
         total_users.append(total_users[i-1])
         total_regular_users.append(total_regular_users[i-1])
+
+    # total runs
+    total_runs[i] += n  
+
 
     # Get user exec stats
     #   requires Admin priveleges
@@ -334,6 +352,23 @@ total_users_df = pd.DataFrame({'total_users': pd.Series(total_users,
 
 total_users_plot = total_users_df \
                                 .plot(kind="line", figsize=(15,5), ylim=(0,total_users[-1]+int(math.floor(total_users[-1]/10))), fontsize=15, lw=5)
+total_users_plot.xaxis.grid(True)
+total_users_plot.yaxis.grid(True) 
+
+###############################################################################
+# NEW CELL
+###############################################################################
+
+total_runs_df = pd.DataFrame({'total_runs': pd.Series(total_runs,
+                                                      index=dates)
+                              })
+
+###############################################################################
+# NEW CELL
+###############################################################################
+
+total_runs_plot = total_runs_df \
+                                .plot(kind="line", figsize=(15,5), ylim=(0,total_runs[-1]+int(math.floor(total_runs[-1]/10))), fontsize=15, lw=5)
 total_users_plot.xaxis.grid(True)
 total_users_plot.yaxis.grid(True) 
 
